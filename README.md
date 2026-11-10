@@ -1,57 +1,57 @@
 # Twelve — family outfit planner
 
-Outfit libraries, editable clothing tags, 12-day itineraries, and packing lists for Shams, Jonathan, and Ethan. Jonathan's original 17 outfit photos are included. Shams has 32 pre-tagged outfit photos; Ethan has 12 pre-tagged outfit photos. The phone layout includes swipeable outfit cards, native day selectors, and bottom navigation.
+One shared family itinerary: each of Days 1–12 shows **Shams, Jonathan, and Ethan side by side**, with one outfit per person. The planner includes 61 tagged photos: Shams 32, Jonathan 17, and Ethan 12.
+
+## Plan your family days
+
+- Each day has three fixed person columns. Choose an outfit in each column to complete that family day (3/3).
+- **Choose outfit** opens a photo chooser containing only that person's looks. Tap a photo to assign it. Use **Change outfit** to replace it, or clear that person's day from the chooser.
+- Drag and drop works on desktop. A photo can only be dropped into its owner's column.
+- Each outfit is scheduled once. Moving an already scheduled outfit onto an occupied day swaps the two outfits for that person. Other people's plans stay intact.
+- The summary tracks complete family days and the 36 individual outfit slots.
+
+## Filter and manage photos
+
+The **Family outfit library** has a **Show photos** dropdown: All family photos, Shams, Jonathan, or Ethan. This filters only the photo library; all three people remain visible in every family day.
+
+Each photo displays its owner and provides a **Person** dropdown, editable clothing tags, notes, and a **Wear on** day selector. Changing a photo's person clears its old day assignment and moves it into the new person's library.
+
+To upload, choose **New photos belong to**, then upload one or several photos. Selecting a person in the photo filter also selects them as the upload recipient. You can change that recipient before uploading.
+
+The phone layout keeps all three people side by side, with a two-column photo chooser and native selectors. Bottom navigation jumps between family days, photos, and packing. Photos are swipeable in the phone library. Use the day jump selector to move through the itinerary.
+
+## Clothing reuse and packing
+
+Reuse tags compare matching jacket, sweater, pants, skirt/shorts, and scarf names **within each person's plan**. The same label on another person's clothing is treated separately. Later reuse days are highlighted under the day's outfit. Expand **Clothing & reuse** for all matching days and pieces.
+
+The family packing list groups unique scheduled pieces by person, category, and all days of use. Labels are editable and inferred from appearance; obscured pieces are left blank. New uploads need manual clothing tags.
 
 ## Website files
 
-Publish **both** `index.html` and `cloud-sync.js` in the root of `thancute09-coder/outfit-planner`. GitHub Pages deploys from `main` / root. The website URL is:
+Publish `index.html`, `cloud-sync.js`, and `.nojekyll` in the root of `thancute09-coder/outfit-planner`. GitHub Pages deploys from `main` / root:
 
 https://thancute09-coder.github.io/outfit-planner/
 
-Local planning works when the files are opened directly. Shared sync requires the published HTTPS website; file URLs are intentionally not allowed by the backend.
+Local planning also works by opening the HTML with its companion JavaScript file in the same folder. Shared sync requires the published HTTPS site.
 
 ## Shared sync
 
-The Cloudflare endpoint is:
+Server: https://twelve-family-sync.thancute09.workers.dev
 
-https://twelve-family-sync.thancute09.workers.dev
+The private repository `thancute09-coder/outfit-planner-data` stores `family/state.json` and newly synced photos in `family/photos/`. Backend source and credential setup instructions are supplied in the downloadable package under `backend/`.
 
-The separate private repository `thancute09-coder/outfit-planner-data` stores shared metadata in `family/state.json` and newly uploaded photos in `family/photos/`. Backend setup is documented in `backend/SETUP.md`. Sync remains unavailable until the two Worker secrets are configured.
+Connect both phones using **Connect shared plan**, the same server address, and the same family key. The first phone initializes the shared plan after confirmation; the other loads it. The GitHub token stays in a Worker secret and must never be placed in the HTML.
 
-On your first phone:
+Changes save after about two seconds of inactivity. A connected, visible page checks for changes every 20 seconds. Wait for **Synced** before closing. Reconnect after refreshing or reopening; the family key stays only in memory for the open page. Profile filters are local view settings; outfit plans for all three people sync together. The original 61 photos are referenced by ID instead of being resent on each edit.
 
-1. Open the published website and choose **Connect shared plan**.
-2. Use the default server address and enter your family sync key.
-3. If the server is empty, confirm publishing this device's three profiles as the family plan.
-4. Wait for **Synced** before closing the page.
+Conflicting simultaneous edits are rejected rather than silently overwriting the other phone's changes. Export a local backup, load the latest shared plan, and reapply the desired edits. There is no iOS background sync after closing the page.
 
-On the other phone:
+## Existing plans and backups
 
-1. Open the same website, choose **Connect shared plan**, and enter the same family key.
-2. Confirm loading the shared plan.
+Existing person-based day assignments are preserved and appear together in the family itinerary. The backup format and shared sync data remain compatible with the previous version. Export includes all three people and their photos; Import replaces all three after confirmation. Older single-person backups migrate to Jonathan.
 
-Changes save after about two seconds of inactivity. A connected, visible page checks for changes about every 20 seconds. Keep it open until it says Synced; closing Safari before sync finishes can leave edits only on that device. The family key stays in memory for the open page; reconnect after a refresh or reopening. Profile selection stays specific to each phone, while the three people's plans are shared.
+Browser IndexedDB keeps local data. Before a shared plan replaces local data, a recovery copy is saved. **Recovery backup** downloads that copy. Clearing browser data removes local plans and recovery copies. Keep exported backups.
 
-The initial 61 photos are already in the HTML and are referenced by ID during sync. Only new photos are uploaded once; subsequent schedule edits transfer small JSON updates. GitHub records saved versions as commits. New sync photos are limited to 4 MB after browser resizing; plans support up to 300 outfits per person and a 512 KB metadata request.
+Starter collections are added once without resetting schedules. Deleted photos stay deleted after refresh. **Restore missing starter photos** adds missing looks across the family without duplicating photos whose owner was changed.
 
-If both phones edit at once, the later save can report a conflict. Local edits stay intact. Export a backup, then choose **Load shared plan** and reapply the desired edits. The app does not silently overwrite the other phone's save or automatically merge conflicts.
-
-## Backups and local storage
-
-Browser IndexedDB keeps this device's plan. Export backup includes all three profiles and photos. Import replaces all three after confirmation; older backups migrate to Jonathan. Before a shared plan replaces local data, a recovery copy is stored locally. **Recovery backup** downloads the most recent copy; use Import backup to restore it. Clearing browser data removes both the local plan and that recovery copy.
-
-Disconnecting stops sharing and clears the family key from memory. It does not delete shared GitHub data. Anyone with the family key can read and edit all three profiles; these are not separate login accounts.
-
-The 61 starter photos are embedded in the public website and repository. Newly synced photos and schedule data go into the separate private repository. Clothing matches are inferred from appearance and editable. Tags on new uploads are entered manually.
-
-## Development
-
-No frontend installation or build is needed. The backend is a Cloudflare Worker ES module in `backend/worker.mjs`, configured by `backend/wrangler.jsonc`. Secrets must never be committed. Uploading the backend source files to GitHub Pages does not run them; the Worker must be deployed separately.
-
-## Shams collection
-
-The 32 Shams photos are pre-tagged and unassigned. Existing browser plans receive this collection once without replacing outfits or day assignments. Deleted photos stay deleted after refresh. Use “Add Shams’s 32 outfits” to restore any missing starter looks, or to add them after connecting to an older shared plan. Skirt/shorts and scarf fields track those repeated pieces separately from pants. Hidden bottoms are left blank rather than guessed. Similar-looking items are grouped provisionally and remain editable.
-
-## Ethan collection
-
-Ethan has 12 photos with editable jacket, sweater, and pants tags, all initially unassigned. The orange fleece collage uses the pants shown in its inset. The orange fleece and navy dinosaur jacket may be two sides of the same reversible jacket; they are kept separate until confirmed. The two rainbow-puffer photos share a jacket tag. Gray pants with blue side stripes are linked across the yellow-parka look and the orange-fleece collage. Existing schedules are preserved. Use “Add Ethan’s 12 outfits” to restore missing starter looks or add them after loading an older shared plan.
+The 61 starter photos are embedded in the public website and repository. New sync uploads and shared schedules use the separate private data repository. Anyone with the family key can view and edit the whole family plan; person labels are not separate login accounts.
