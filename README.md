@@ -1,6 +1,6 @@
 # Twelve — family outfit planner
 
-Outfit libraries, editable clothing tags, 12-day itineraries, and packing lists for Shams, Jonathan, and Ethan. Jonathan's original 17 outfit photos are included. Shams and Ethan start empty. The phone layout includes swipeable outfit cards, native day selectors, and bottom navigation.
+Outfit libraries, editable clothing tags, 12-day itineraries, and packing lists for Shams, Jonathan, and Ethan. Jonathan's original 17 outfit photos are included. Shams has 32 pre-tagged outfit photos; Ethan starts empty. The phone layout includes swipeable outfit cards, native day selectors, and bottom navigation.
 
 ## Website files
 
@@ -32,7 +32,7 @@ On the other phone:
 
 Changes save after about two seconds of inactivity. A connected, visible page checks for changes about every 20 seconds. Keep it open until it says Synced; closing Safari before sync finishes can leave edits only on that device. The family key stays in memory for the open page; reconnect after a refresh or reopening. Profile selection stays specific to each phone, while the three people's plans are shared.
 
-The initial 17 photos are already in the HTML and are referenced by ID during sync. Only new photos are uploaded once; subsequent schedule edits transfer small JSON updates. GitHub records saved versions as commits. New sync photos are limited to 4 MB after browser resizing; plans support up to 300 outfits per person and a 512 KB metadata request.
+The initial 49 photos are already in the HTML and are referenced by ID during sync. Only new photos are uploaded once; subsequent schedule edits transfer small JSON updates. GitHub records saved versions as commits. New sync photos are limited to 4 MB after browser resizing; plans support up to 300 outfits per person and a 512 KB metadata request.
 
 If both phones edit at once, the later save can report a conflict. Local edits stay intact. Export a backup, then choose **Load shared plan** and reapply the desired edits. The app does not silently overwrite the other phone's save or automatically merge conflicts.
 
@@ -42,8 +42,12 @@ Browser IndexedDB keeps this device's plan. Export backup includes all three pro
 
 Disconnecting stops sharing and clears the family key from memory. It does not delete shared GitHub data. Anyone with the family key can read and edit all three profiles; these are not separate login accounts.
 
-The 17 starter photos are embedded in the public website and repository. Newly synced photos and schedule data go into the separate private repository. Clothing matches are inferred from appearance and editable. Tags on new uploads are entered manually.
+The 49 starter photos are embedded in the public website and repository. Newly synced photos and schedule data go into the separate private repository. Clothing matches are inferred from appearance and editable. Tags on new uploads are entered manually.
 
 ## Development
 
 No frontend installation or build is needed. The backend is a Cloudflare Worker ES module in `backend/worker.mjs`, configured by `backend/wrangler.jsonc`. Secrets must never be committed. Uploading the backend source files to GitHub Pages does not run them; the Worker must be deployed separately.
+
+## Shams collection
+
+The 32 Shams photos are pre-tagged and unassigned. Existing browser plans receive this collection once without replacing outfits or day assignments. Deleted photos stay deleted after refresh. Use “Add Shams’s 32 outfits” to restore any missing starter looks, or to add them after connecting to an older shared plan. Skirt/shorts and scarf fields track those repeated pieces separately from pants. Hidden bottoms are left blank rather than guessed. Similar-looking items are grouped provisionally and remain editable.
